@@ -17,7 +17,7 @@ class VelocityControllerNode(Node):
 
     self.destination_x = float(input("determine x spot"))  
     self.destination_y = float(input("determine y spot"))  
-
+    
 
     self.current_x = 0.0
     self.current_y = 0.0
@@ -33,10 +33,11 @@ class VelocityControllerNode(Node):
     return distance, angle
 
   def velocity_command(self):                  #hızlı publishlemek için oluşturuludu
+
     distance, angle = self.position_info()
     cmd = Twist()                              #class oluştur
 
-    if distance > 0.03:  # Hedefe ile mesafe uzaksa hız bilgisi gönder
+    if distance > 0.05:  # Hedefe ile mesafe uzaksa hız bilgisi gönder
       cmd.linear.x = 0.2
 
             # Hedefe doğru yönelmek için dönüş
@@ -47,7 +48,7 @@ class VelocityControllerNode(Node):
       else:                       
         cmd.angular.z = 0.0       # Yön farkı küçükse düz git
     else:
-          
+      self.reached_goal = True    
       cmd.linear.x = 0.0               # Hedefe yakınsan dur
       cmd.angular.z = 0.0
       self.get_logger().info("Reached!")
@@ -67,11 +68,12 @@ class VelocityControllerNode(Node):
                                                  
     distance, _ = self.position_info()
 
-    if distance < 0.03:  
-      self.get_logger().info("Reached!")     # Hedefe yaklaşıldığında dur
-      cmd = Twist()
+    if distance < 0.05:  
+
+      cmd = Twist()                  # Hedefe yaklaşıldığında dur
       cmd.linear.x = 0.0
       cmd.angular.z = 0.0
+      self.get_logger().info("Reached!")  
       self.cmd_vel_publisher_.publish(cmd)
 
 def main(args=None):
