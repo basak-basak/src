@@ -32,7 +32,7 @@ class VelocityControllerNode(Node):
 
     return distance, angle
 
-  def velocity_command(self):                  #hızlı publishlemek için oluşturuludu
+  def velocity_command(self):                  #hızı publishlemek için oluşturuludu
 
     distance, angle = self.position_info()
     cmd = Twist()                                    
