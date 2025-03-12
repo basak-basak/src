@@ -40,7 +40,7 @@ class VelocityControllerNode(Node):
     if distance > 0.05:  # Hedefe ile mesafe uzaksa hız bilgisi gönder
       cmd.linear.x = 0.2
 
-            # Hedefe doğru yönelmek için dönüş
+           
       angle_diff = angle - self.current_yaw  # Mevcut yön ile hedef yönü arasındaki fark
 
       if abs(angle_diff) > 0.05:  
@@ -48,7 +48,7 @@ class VelocityControllerNode(Node):
       else:                       
         cmd.angular.z = 0.0       # Yön farkı küçükse düz git
     else:
-      self.reached_goal = True    
+     
       cmd.linear.x = 0.0               # Hedefe yakınsan dur
       cmd.angular.z = 0.0
       self.get_logger().info("Reached!")
