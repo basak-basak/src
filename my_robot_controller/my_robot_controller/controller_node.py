@@ -35,20 +35,17 @@ class VelocityControllerNode(Node):
   def velocity_command(self):                  #hızlı publishlemek için oluşturuludu
 
     distance, angle = self.position_info()
-    cmd = Twist()                              #class oluştur
+    cmd = Twist()                                    
+    angle_diff = angle - self.current_yaw  # Mevcut yön ile hedef yönü arasındaki fark
 
-    if distance > 0.05:  # Hedefe ile mesafe uzaksa hız bilgisi gönder
-      cmd.linear.x = 0.2
-
-           
-      angle_diff = angle - self.current_yaw  # Mevcut yön ile hedef yönü arasındaki fark
-
-      if abs(angle_diff) > 0.05:  
-        cmd.angular.z = 0.05 if angle_diff > 0 else 0.05 # Yön farkı büyükse dön
-      else:                       
-        cmd.angular.z = 0.0       # Yön farkı küçükse düz git
+    if abs(angle_diff) > 0.1:  
+        cmd.angular.z = 0.3 if angle_diff > 0 else -0.3  
     else:
-     
+        cmd.angular.z = 0.0 
+    
+    if distance > 0.3:  # Hedefe ile mesafe uzaksa hız bilgisi gönder
+      cmd.linear.x = 0.5       
+    else:   
       cmd.linear.x = 0.0               # Hedefe yakınsan dur
       cmd.angular.z = 0.0
       self.get_logger().info("Reached!")
@@ -68,7 +65,7 @@ class VelocityControllerNode(Node):
                                                  
     distance, _ = self.position_info()
 
-    if distance < 0.05:  
+    if distance < 0.3:  
 
       cmd = Twist()                  # Hedefe yaklaşıldığında dur
       cmd.linear.x = 0.0
